@@ -1,7 +1,7 @@
 import cv2
 import os
 
-video_path = r'C:\Users\sport\Documents\g14\comp\badminton\video\media_w1113984215_38.ts'
+video_path = './video/media_w1113984215_38.ts'  # 상대경로로 변경
 output_folder = 'frames'
 
 if not os.path.exists(output_folder):
