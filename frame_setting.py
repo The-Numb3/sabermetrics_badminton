@@ -4,7 +4,7 @@ import numpy as np
 
 
 # 이미지 파일을 불러옵니다.
-image_path = r'C:\Users\sport\Documents\g14\comp\badminton\frames\frame_0.jpg'  # 여기에 실제 이미지 파일 경로를 입력하세요.
+image_path = './frames/frame_0.jpg'  
 
 
 class court_detection:
