@@ -24,6 +24,7 @@ class court_detection:
             self.h, self.w = self.img.shape[0:2]
         
         self.vis = self.img.copy()
+        self.overlay = self.vis.copy()
 
         #1 흰색 선 분리
         self.hsv = cv2.cvtColor(self.img, cv2.COLOR_BGR2HSV)
@@ -111,21 +112,31 @@ class court_detection:
             self.pts = self.uniq[:4]
 
         box = self.order_corners(self.pts)
+        # 직선 그리기
         for L in [self.L0a, self.L0b, self.L1a, self.L1b]:
             self.overlay_lines(L)
+        
+        for L in self.fam0:
+            self.overlay_lines(L,(0,255,0))
+        for L in self.fam1:
+            self.overlay_lines(L,(0,0,255))
+        # 모서리 점 표시
+        for name, pt in zip(['tl', 'tr', 'br', 'bl'], self.pts):
+            pt_int = tuple(map(int, pt))
+            cv2.circle(self.overlay, pt_int, 6, (0, 255, 0), -1)
+            cv2.putText(self.overlay, name, (pt_int[0]+6, pt_int[1]-6), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
         cv2.imshow("overlay", self.overlay)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
     #오버레이 이미지 출력하는 함수
-    def overlay_lines(self,L):
-        self.overlay = self.vis.copy()
+    def overlay_lines(self,L,color=(0,0,255)):
         if self.linesP is not None:
             for line in self.linesP:
                 x1, y1, x2, y2 = line[0]
-                cv2.line(self.overlay, (x1, y1), (x2, y2), (0, 0, 255), 2)
-        
+                cv2.line(self.overlay, (x1, y1), (x2, y2), color, 2)
+
         a,b,c = L
         H, W = self.img.shape[:2]
         if abs(b) > 1e-6:
@@ -136,10 +147,6 @@ class court_detection:
             x = int(-c/a)
             cv2.line(self.overlay, (x, 0), (x, H), (255, 0, 0), 2)
 
-        for name, pt in zip(['tl', 'tr', 'br', 'bl'], self.pts):
-            pt_int = tuple(map(int, pt))
-            cv2.circle(self.overlay, pt_int, 6, (0, 255, 0), -1)
-            cv2.putText(self.overlay, name, (pt_int[0]+6, pt_int[1]-6), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
     
     def angle_of_segment(self, p1, p2):
         """두 점을 잇는 선분의 각도를 계산합니다. (0~180도)"""
