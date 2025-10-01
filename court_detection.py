@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from sklearn.cluster import DBSCAN
 
-image_path = './frames/frame_0.jpg'
+image_path = './frames/media_w440787024_1.ts/frame_200.jpg'
 
 #선 검출 파라미터 튜닝할만한 부분: self.kernel 크기, 허프변환(cv2.HoughLines)의 threshold값
 
@@ -40,7 +40,7 @@ class court_detection:
         self.lines = cv2.HoughLines(self.img, 1, np.pi/180, threshold=200)
 
         #라인 클러스터링
-        self.lines = self.line_clustering(self.lines)
+        self.lines = self.line_clustering_dbscan(self.lines)
 
         #출력하는 부분
         if self.lines is not None:
@@ -85,7 +85,7 @@ class court_detection:
         y2 = int(y0 - 2000*(a))
         cv2.line(self.img, (x1, y1), (x2, y2), color, thickness)
 
-    def line_clustering(self, lines, threshold= 15, min_samples=1):
+    def line_clustering_dbscan(self, lines, threshold= 20, min_samples=1):
 
         #선의 개수가 충분하지 않다고 판단
         if lines is None:

@@ -1,8 +1,9 @@
 import cv2
 import os
 
-video_path = './video/media_w1113984215_38.ts'  # 상대경로로 변경
-output_folder = './frames'
+video_name = 'media_w1113984215_38.ts'
+video_path = f'./video/{video_name}'  # 상대경로로 변경
+output_folder = f'./frames/{video_name}'
 
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
