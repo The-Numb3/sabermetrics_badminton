@@ -85,8 +85,7 @@ class court_detection:
         y2 = int(y0 - 2000*(a))
         cv2.line(self.img, (x1, y1), (x2, y2), color, thickness)
 
-    def line_clustering(self, lines, threshold= 20, min_samples=1):
-        clustered = []
+    def line_clustering(self, lines, threshold= 15, min_samples=1):
 
         #선의 개수가 충분하지 않다고 판단
         if lines is None:

@@ -35,20 +35,21 @@ class court_detection:
         self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
         self.enhanced = cv2.addWeighted(self.gray, 0.5, cv2.normalize(self.gray, None, 0, 255, cv2.NORM_MINMAX), 0.5, 0)
         self.mask2 = cv2.threshold(self.enhanced, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)[1]
-        self.mask = cv2.bitwise_and(self.mask, self.mask2)
+        self.mask = cv2.bitwise_and(self.mask, self.mask2)'''
 
         # 5. 모폴로지 연산으로 잡음 제거 + 선 두껍게
-        self.kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5,5))
+        self.kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2,2))
         self.mask = cv2.morphologyEx(self.mask, cv2.MORPH_CLOSE, self.kernel, iterations=1)
-        self.mask = cv2.morphologyEx(self.mask, cv2.MORPH_OPEN, self.kernel, iterations=1)'''
+        self.mask = cv2.morphologyEx(self.mask, cv2.MORPH_OPEN, self.kernel, iterations=1)
 
         # 6. 캐니 엣지 검출 후 허프 직선 변환
         self.edges = cv2.Canny(self.mask, 50, 150, apertureSize=3, L2gradient=True)
+
         # HoughLines → 무한 직선 검출 (rho, theta 반환)
         self.lines = cv2.HoughLines(self.edges, 1, np.pi/180, threshold=120)
 
         # --- 허프 변환 결과 시각화: 모든 검출된 직선 빨간색으로 표시 ---
-        '''        vis_lines = self.img.copy()
+        vis_lines = self.img.copy()
         if self.lines is not None:
             for l in self.lines[:,0,:]:
                 rho, theta = l
@@ -64,7 +65,7 @@ class court_detection:
                 cv2.line(vis_lines, (x1, y1), (x2, y2), (0,0,255), 2)
             cv2.imshow('HoughLines result', vis_lines)
             cv2.waitKey(0)
-            cv2.destroyWindow('HoughLines result')'''
+            cv2.destroyWindow('HoughLines result')
 
         if self.lines is None or len(self.lines) < 4:
             raise RuntimeError("충분한 직선을 찾지 못했습니다. 조명/대비/파라미터를 조정하세요.")
@@ -105,7 +106,7 @@ class court_detection:
         for L in [self.L0a, self.L0b, self.L1a, self.L1b]:
             print(f"선택된 직선: {L}")
 
-        # 13. 결과 시각화 (외곽선/군집 직선/교차점)
+        '''# 13. 결과 시각화 (외곽선/군집 직선/교차점)
         for L in [self.L0a, self.L0b, self.L1a, self.L1b]:
             self.overlay_lines(L)
         for L in self.fam0:
@@ -117,7 +118,7 @@ class court_detection:
         # 14. 결과 출력
         cv2.imshow("overlay", self.overlay)
         cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        cv2.destroyAllWindows()'''
 
         # 10. 선택된 직선들 교차점 계산 → 네 모서리 추출
         self.pts = []
