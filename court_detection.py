@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from sklearn.cluster import DBSCAN
 
-image_path = './frames/media_w440787024_1.ts/frame_400.jpg'
+image_path = './frames/media_w440787024_1.ts/frame_200.jpg'
 
 #선 검출 파라미터 튜닝할만한 부분: self.kernel 크기, 허프변환(cv2.HoughLines)의 threshold값
 
